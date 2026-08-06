@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="Imagem de exemplo — paisagem">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f4fd8"/>
+      <stop offset="1" stop-color="#7fa4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#ceu)"/>
+  <circle cx="930" cy="190" r="90" fill="#fbfbf7" opacity=".9"/>
+  <path d="M0 620 L280 380 L470 600 L640 430 L900 700 L1200 520 L1200 800 L0 800 Z" fill="#16274a" opacity=".85"/>
+  <path d="M0 700 L240 560 L520 740 L780 590 L1200 760 L1200 800 L0 800 Z" fill="#0d1730"/>
+  <text x="60" y="120" font-family="Segoe UI, system-ui, sans-serif" font-size="42" font-weight="700" fill="#fbfbf7" opacity=".9">imagem de exemplo</text>
+  <text x="60" y="172" font-family="Segoe UI, system-ui, sans-serif" font-size="26" fill="#fbfbf7" opacity=".7">1200 × 800 · troque por um arquivo em public/</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-label="Figura de exemplo — registro cumulativo de respostas ao longo do tempo">
+  <rect width="960" height="620" fill="#fbfbf7"/>
+
+  <!-- Grade -->
+  <g stroke="#dfe3ec" stroke-width="1">
+    <path d="M120 500 H900"/><path d="M120 420 H900"/><path d="M120 340 H900"/>
+    <path d="M120 260 H900"/><path d="M120 180 H900"/><path d="M120 100 H900"/>
+  </g>
+
+  <!-- Eixos -->
+  <g stroke="#16274a" stroke-width="3" fill="none" stroke-linecap="square">
+    <path d="M120 80 V520"/>
+    <path d="M120 520 H900"/>
+  </g>
+
+  <!-- Curva cumulativa: platôs e acelerações, como num registro de razão fixa -->
+  <polyline fill="none" stroke="#1f4fd8" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"
+    points="130,505 200,478 265,466 330,424 395,406 462,352 528,326 596,258 662,232 730,158 800,132 870,104"/>
+
+  <!-- Marcas de reforço na curva -->
+  <g stroke="#16274a" stroke-width="3" stroke-linecap="round">
+    <path d="M265 466 l-14 22"/>
+    <path d="M395 406 l-14 22"/>
+    <path d="M528 326 l-14 22"/>
+    <path d="M662 232 l-14 22"/>
+    <path d="M800 132 l-14 22"/>
+  </g>
+
+  <!-- Rótulos -->
+  <g font-family="Segoe UI, system-ui, sans-serif" fill="#16274a">
+    <text x="120" y="52" font-size="26" font-weight="700">Registro cumulativo</text>
+    <text x="120" y="576" font-size="20" fill="#5b6884">Tempo de sessão →</text>
+    <text x="-330" y="34" font-size="20" fill="#5b6884" transform="rotate(-90)">Respostas acumuladas →</text>
+    <text x="700" y="560" font-size="17" fill="#5b6884">as barras marcam os reforços</text>
+  </g>
+</svg>

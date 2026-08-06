@@ -1,0 +1,56 @@
+name: Publicar aulas no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Publicação por branch: o job dá push do dist/ no branch gh-pages, e o Pages serve
+# esse branch. Não usamos o caminho de artefato do Actions (configure-pages /
+# upload-pages-artifact / deploy-pages) porque nesta conta ele nunca publicou — as
+# implantações ficavam em `deployment_queued` até o timeout, sem consumir o artefato.
+permissions:
+  contents: write
+
+concurrency:
+  group: publicar-aulas
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # SITE_BASE vira o --base de cada deck. O nome do repositório faz parte das URLs
+      # do Pages — por isso ele é lido daqui e não fica hardcoded.
+      - name: Build das aulas
+        run: node scripts/build-site.mjs
+        env:
+          SITE_BASE: /${{ github.event.repository.name }}/
+
+      # Branch órfão, sobrescrito a cada publicação: o gh-pages guarda só o site atual,
+      # sem acumular histórico de build. O .nojekyll (gerado pelo build) impede o Jekyll
+      # de reprocessar a pasta assets/.
+      - name: Publicar no branch gh-pages
+        working-directory: dist
+        run: |
+          test -f index.html || { echo "dist/index.html não existe — build falhou?"; exit 1; }
+          test -f .nojekyll || touch .nojekyll
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publica ${GITHUB_SHA::7}"
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          echo "Publicado $(git ls-files | wc -l) arquivos em gh-pages"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

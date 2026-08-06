@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Marca de exemplo — colorida">
+  <rect width="320" height="320" rx="72" fill="#1f4fd8"/>
+  <!-- Alça organismo ↔ ambiente: o anel aberto com a seta é a consequência realimentando
+       a resposta; o ponto central é o organismo. -->
+  <g fill="none" stroke="#fbfbf7" stroke-width="18" stroke-linecap="round">
+    <path d="M214 214 A76 76 0 1 1 214 106"/>
+  </g>
+  <path d="M214 84 l34 22 l-34 22 z" fill="#fbfbf7"/>
+  <circle cx="160" cy="160" r="24" fill="#fbfbf7"/>
+</svg>

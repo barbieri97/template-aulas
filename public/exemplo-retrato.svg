@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" width="900" height="1200" role="img" aria-label="Imagem de exemplo — retrato">
+  <defs>
+    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16274a"/>
+      <stop offset="1" stop-color="#1f4fd8"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#fundo)"/>
+  <g fill="none" stroke="#fbfbf7" stroke-width="6" opacity=".55">
+    <circle cx="450" cy="430" r="180"/>
+    <circle cx="450" cy="430" r="110"/>
+    <path d="M180 760 H720"/>
+    <path d="M180 860 H560"/>
+    <path d="M180 960 H640"/>
+  </g>
+  <text x="180" y="1090" font-family="Segoe UI, system-ui, sans-serif" font-size="34" font-weight="700" fill="#fbfbf7" opacity=".85">retrato 900 × 1200</text>
+</svg>

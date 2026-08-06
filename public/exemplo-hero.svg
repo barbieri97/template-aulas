@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 900" width="1920" height="900" role="img" aria-label="Imagem de exemplo — hero panorâmico com área livre à esquerda">
+  <defs>
+    <linearGradient id="hceu" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1730"/>
+      <stop offset=".55" stop-color="#16274a"/>
+      <stop offset="1" stop-color="#1f4fd8"/>
+    </linearGradient>
+    <radialGradient id="hbrilho" cx=".78" cy=".28" r=".55">
+      <stop offset="0" stop-color="#7fa4ff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#7fa4ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="900" fill="url(#hceu)"/>
+  <rect width="1920" height="900" fill="url(#hbrilho)"/>
+
+  <!-- Massa visual concentrada à direita: a metade esquerda fica livre para o texto sobreposto
+       do layout `bleed` (kicker, stat, title, subtitle). -->
+  <g opacity=".5" fill="none" stroke="#fbfbf7" stroke-width="3">
+    <circle cx="1450" cy="250" r="120"/>
+    <circle cx="1450" cy="250" r="210"/>
+    <circle cx="1450" cy="250" r="300"/>
+  </g>
+  <g fill="#fbfbf7" opacity=".9">
+    <circle cx="1450" cy="250" r="26"/>
+  </g>
+
+  <path d="M1080 900 L1300 520 L1520 900 Z" fill="#0d1730" opacity=".75"/>
+  <path d="M1360 900 L1620 470 L1880 900 Z" fill="#0d1730" opacity=".55"/>
+  <path d="M0 780 C 360 700, 720 820, 1920 720 L1920 900 L0 900 Z" fill="#0d1730" opacity=".85"/>
+
+  <g stroke="#7fa4ff" stroke-width="2" opacity=".35">
+    <path d="M0 640 H1920"/>
+    <path d="M0 690 H1920"/>
+    <path d="M0 740 H1920"/>
+  </g>
+</svg>

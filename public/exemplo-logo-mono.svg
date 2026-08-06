@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="Marca de exemplo — monocromática">
+  <!-- Sem fundo: marca chapada numa cor só. É este tipo de arquivo que o `logoInvert` inverte
+       quando a marca é escura e o variant também é (ou o contrário). -->
+  <g fill="none" stroke="#16274a" stroke-width="18" stroke-linecap="round">
+    <path d="M214 214 A76 76 0 1 1 214 106"/>
+  </g>
+  <path d="M214 84 l34 22 l-34 22 z" fill="#16274a"/>
+  <circle cx="160" cy="160" r="24" fill="#16274a"/>
+</svg>
