@@ -41,28 +41,29 @@ uma vez só:
 
 1. Crie o repositório em github.com — público, sem README/gitignore/licença.
    **O nome importa:** ele vira o prefixo de todas as URLs do site.
-2. Conecte e envie:
+2. **Settings → Pages → Build and deployment → Source: `GitHub Actions`.**
+   Este passo vem **antes** do primeiro push: com a fonte em `Deploy from a branch`, o passo
+   `configure-pages` do workflow falha logo no início.
+3. Conecte e envie:
    ```bash
    git remote add origin https://github.com/<usuario>/<nome-do-repo>.git
    git push -u origin main
    ```
-3. Espere a primeira run terminar — é ela que cria o branch `gh-pages`.
-4. **Settings → Pages → Build and deployment → Source: `Deploy from a branch`**,
-   branch **`gh-pages`**, pasta **`/ (root)`**.
-5. Aba **Actions** → a run "Publicar aulas no GitHub Pages" fica verde.
+4. Aba **Actions** → a run "Publicar aulas no GitHub Pages" fica verde. A URL publicada aparece
+   no job `deploy` (e em Settings → Pages).
 
 Daí em diante, todo push na `main` republica.
 
 > Se você **renomear** o repositório, atualize o remote local
-> (`git remote set-url origin https://github.com/<usuario>/<novo-nome>.git`). Uma run disparada
-> no exato momento do rename pode falhar no push do `gh-pages`; basta reexecutá-la.
+> (`git remote set-url origin https://github.com/<usuario>/<novo-nome>.git`) e rode o workflow de
+> novo — o `--base` dos decks é gravado no build, então o site precisa ser reconstruído com o
+> nome novo.
 
 ## Usar este repositório como template para outra disciplina
 
 Nada aqui tem o nome do repositório ou da disciplina chumbado no código: o `--base` sai do nome do
 repositório no CI, e a identidade do curso mora em [`site.config.json`](site.config.json). Criando
-um repo novo **a partir do template** (sem marcar *Include all branches* — o `gh-pages` do repo
-antigo não deve vir junto):
+um repo novo **a partir do template**:
 
 1. Edite `site.config.json` — quatro campos, é o único arquivo de identidade:
    ```json
@@ -75,28 +76,30 @@ antigo não deve vir junto):
    ```
 2. Apague as aulas de exemplo em `aulas/` e escreva a primeira. **O build falha de propósito com
    `aulas/` vazio** — não deixe o repo sem nenhuma aula esperando o CI ficar verde.
-3. Faça o push na `main` e espere a run terminar (é ela que cria o branch `gh-pages`).
-4. **Settings → Pages → Source: `Deploy from a branch`**, branch **`gh-pages`**, pasta
-   **`/ (root)`**. Configuração de repositório não vem do template — este passo é sempre manual.
-5. Se a run falhar com `403` no push, veja **Settings → Actions → General → Workflow permissions**.
+3. **Settings → Pages → Source: `GitHub Actions`.** Configuração de repositório não vem do
+   template — este passo é sempre manual, e precisa vir antes do primeiro push.
+4. Faça o push na `main` e espere a run terminar.
 
 O `README.md` e o título deste arquivo continuam sendo texto seu — troque quando quiser.
 
-### Por que branch `gh-pages` e não o deploy via Actions
+### Como a publicação chega no Pages
 
 O GitHub tem dois jeitos de publicar Pages: mandar um artefato pelo Actions
-(`upload-pages-artifact` + `deploy-pages`) ou servir um branch. Este repositório usa o **branch**.
+(`configure-pages` + `upload-pages-artifact` + `deploy-pages`) ou servir um branch. Este
+repositório usa o **artefato**.
 
-O caminho por artefato foi tentado primeiro e nunca publicou: o build passava, o artefato era
-válido, mas a implantação ficava em `deployment_queued` até o timeout de 10 minutos, sem erro.
-Recriar o site do Pages trocou o silêncio por erros reais, mas aí uma implantação ficou encravada
-(a API dizia `deployment_cancelled` enquanto o agendador recusava novas por "in progress
-deployment"). Nada disso vinha do Slidev, do workflow ou de ter várias aulas — o artefato nunca
-chegou a ser aberto.
+O workflow tem dois jobs. O `build` roda `scripts/build-site.mjs` e empacota o `dist/` como
+artefato do Pages; o `deploy` recebe esse artefato e publica, autenticando por OIDC — daí as
+permissões `pages: write` e `id-token: write`, e o `environment: github-pages` no job de deploy.
 
-A publicação por branch não passa por esse subsistema. O job builda e dá `push --force` do `dist/`
-num branch órfão `gh-pages`, que o Pages serve como arquivo estático. O `.nojekyll` (gerado pelo
-build) impede o Jekyll de reprocessar a pasta `assets/`.
+O `--base` de cada deck sai do output `base_path` do `configure-pages`, que é o caminho da URL
+real do site (`/<nome-do-repo>` num repo comum, `/` num repo `<usuario>.github.io`). Por isso o
+nome do repositório não aparece em lugar nenhum do código.
+
+> Uma versão anterior deste repositório publicava por branch `gh-pages`, depois de o caminho por
+> artefato ter ficado preso em `deployment_queued` até o timeout. Se isso voltar a acontecer, o
+> sintoma é o job `deploy` pendurado sem erro: cheque em Settings → Pages se a fonte é mesmo
+> `GitHub Actions` e se não há implantação anterior travada.
 
 ## Como funciona o build
 

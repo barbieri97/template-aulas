@@ -68,13 +68,16 @@ tahta, mas não funcionaria com layouts locais colocados na raiz.
 documenta para deploy em subdiretório como o GitHub Pages. Depois gera a landing `dist/index.html`
 lendo o headmatter de cada deck.
 
-A publicação é por **branch**: o workflow dá `push --force` do `dist/` num branch órfão `gh-pages`,
-e o Pages serve esse branch. Não usamos o deploy por artefato do Actions — nesta conta ele nunca
-publicou (implantações ficavam em `deployment_queued` até o timeout). Detalhes no README.
+A publicação é pelo **artefato do Actions**: o job `build` empacota o `dist/` com
+`upload-pages-artifact` e o job `deploy` o entrega ao Pages com `deploy-pages` (OIDC — daí
+`pages: write` + `id-token: write` e o `environment: github-pages`). Exige **Settings → Pages →
+Source: `GitHub Actions`**; com a fonte em `Deploy from a branch` o `configure-pages` falha.
+Detalhes no README.
 
 `scripts/lib.mjs` concentra o que os scripts compartilham: onde ficam as aulas (`deckFiles()`), como
 achar binários de `node_modules` sem npx (`binOf()`) e como ler o `site.config.json` (`siteConfig()`).
 Nenhum script tem nome de arquivo de aula fixo — `npm run dev` descobre a primeira aula sozinho.
 
-O `--base` vem da env `SITE_BASE` (`/` local, `/<nome-do-repo>/` no CI). **O nome do repositório no
-GitHub faz parte das URLs** — renomear o repo muda todos os links.
+O `--base` vem da env `SITE_BASE` (`/` local; no CI, o output `base_path` do `configure-pages`, que
+é o caminho da URL real do site). **O nome do repositório no GitHub faz parte das URLs** — renomear
+o repo muda todos os links e exige rodar o workflow de novo.
