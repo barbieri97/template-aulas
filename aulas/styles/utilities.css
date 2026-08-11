@@ -1,0 +1,75 @@
+/* ============================================================================
+   UTILITIES — as poucas classes que um slide pode usar no markdown.
+
+   O prefixo `ds-` marca o que é deste design system. Tudo aqui existe porque
+   aparece em quase toda aula; se você precisar de algo que só serve a um slide,
+   provavelmente é um componente novo, não uma classe nova.
+
+   O UnoCSS do Slidev continua ligado (`text-sm`, `grid`, `mt-4`…). Use-o para
+   ajustes pontuais; use estas para o que tem significado editorial.
+   ========================================================================== */
+
+/* Rótulo acima de um título: "Aula 02", "Parte 1", o nome do módulo. */
+.ds-kicker {
+  margin: 0 0 var(--ds-space-2);
+  color: var(--ds-accent);
+  font-size: var(--ds-text-xs);
+  font-weight: 700;
+  letter-spacing: var(--ds-tracking-kicker);
+  text-transform: uppercase;
+}
+
+/* Parágrafo de abertura — maior e mais claro que o corpo. */
+.ds-lead {
+  max-width: 46ch;
+  color: var(--ds-muted);
+  font-size: var(--ds-text-lg);
+  line-height: var(--ds-leading-normal);
+}
+
+.ds-muted {
+  color: var(--ds-muted);
+}
+
+/* Destaque inline. Serve principalmente para os campos de frontmatter que
+   aceitam HTML: `title: A pergunta <span class="ds-em">certa</span>`. */
+.ds-em {
+  color: var(--ds-accent);
+  font-weight: 650;
+}
+
+.ds-em-2 {
+  color: var(--ds-accent-2);
+  font-weight: 650;
+}
+
+/* Texto pequeno de rodapé: fonte, crédito, observação. */
+.ds-small {
+  color: var(--ds-muted);
+  font-size: var(--ds-text-sm);
+}
+
+/* Colunas. `--ds-cols` deixa mudar a quantidade sem uma classe por número:
+   <div class="ds-grid" style="--ds-cols: 4"> */
+.ds-grid {
+  display: grid;
+  gap: var(--ds-space-4);
+  grid-template-columns: repeat(var(--ds-cols, 2), minmax(0, 1fr));
+  align-items: start;
+}
+
+/* Empilhamento com respiro constante, para quando o ritmo do markdown não serve. */
+.ds-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+/* Uma régua fina no accent — separador com mais intenção que o <hr>. */
+.ds-rule {
+  width: 3.5rem;
+  height: 3px;
+  margin: var(--ds-space-4) 0;
+  border-radius: 3px;
+  background: var(--ds-accent);
+}

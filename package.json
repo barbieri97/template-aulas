@@ -1,18 +1,15 @@
 {
-  "name": "aulas-slidev",
+  "name": "template-aulas",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "ref": "slidev referencia-tahta.md --open",
+    "ref": "slidev aulas/_design-system.md --open",
     "build": "node scripts/build-site.mjs",
-    "lint": "tahta-lint aulas/*.md",
-    "sync-docs": "node scripts/sync-tahta-docs.mjs"
+    "lint": "node scripts/lint.mjs"
   },
   "dependencies": {
     "@slidev/cli": "^52.19.0",
-    "echarts": "^6.1.0",
-    "slidev-theme-tahta": "^0.13.3",
     "vue": "^3.5.33"
   },
   "devDependencies": {

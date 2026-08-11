@@ -1,0 +1,291 @@
+/* ============================================================================
+   BASE — como o markdown puro de um slide se parece.
+
+   O Slidev já traz um esqueleto de estilo em `.slidev-layout` (padding, tamanho
+   de título, lista, tabela). Este arquivo é carregado depois dele — mesma
+   especificidade, cascata mais tarde — e o reescreve em cima dos tokens.
+
+   Regra de ouro: aqui só entram seletores de elemento dentro de
+   `.slidev-layout`. Nada de classe de componente (isso é `<style scoped>` no
+   .vue) e nada de utilitário (isso é utilities.css).
+   ========================================================================== */
+
+/* A cor "primary" que o Slidev usa nos próprios controles e no `text-primary`
+   do UnoCSS passa a ser o nosso accent — assim a barra de navegação, o cursor
+   do modo desenho e os links combinam com o deck. */
+:root {
+  --slidev-theme-primary: var(--ds-accent);
+  --slidev-code-background: var(--ds-surface);
+  --slidev-code-foreground: var(--ds-ink);
+  --slidev-code-radius: var(--ds-radius);
+  --slidev-code-font-size: 13px;
+  --slidev-code-line-height: 20px;
+  /* A tarja que sobra quando a janela não é 16:9. O padrão do Slidev é preto. */
+  --slidev-slide-container-background: var(--ds-rule);
+}
+
+/* O Slidev pinta o fundo do palco com o shortcut `bg-main` (branco / #121212).
+   Sem isto, sobra uma moldura da cor errada em volta do slide. */
+html,
+body,
+#app,
+#page-root,
+.slidev-page {
+  background: var(--ds-bg);
+  color: var(--ds-ink);
+}
+
+.slidev-layout {
+  padding: var(--ds-pad-slide);
+  background: var(--ds-bg);
+  color: var(--ds-ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- títulos -------------------------------------------------------------- */
+
+.slidev-layout h1 {
+  margin: 0 0 var(--ds-space-5);
+  font-size: var(--ds-text-2xl);
+  font-weight: 700;
+  line-height: var(--ds-leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.slidev-layout h2 {
+  margin: var(--ds-space-6) 0 var(--ds-space-3);
+  font-size: var(--ds-text-xl);
+  font-weight: 650;
+  line-height: var(--ds-leading-tight);
+  letter-spacing: -0.01em;
+}
+
+.slidev-layout h3 {
+  margin: var(--ds-space-5) 0 var(--ds-space-2);
+  font-size: var(--ds-text-lg);
+  font-weight: 650;
+}
+
+/* h4 é o subtítulo discreto de um bloco; h5/h6 quase não aparecem em aula. */
+.slidev-layout h4 {
+  margin: var(--ds-space-4) 0 var(--ds-space-2);
+  font-size: var(--ds-text-base);
+  font-weight: 650;
+  color: var(--ds-muted);
+}
+
+.slidev-layout h5,
+.slidev-layout h6 {
+  margin: var(--ds-space-4) 0 var(--ds-space-2);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+  letter-spacing: var(--ds-tracking-kicker);
+  text-transform: uppercase;
+  color: var(--ds-accent);
+  opacity: 1;
+}
+
+/* Primeiro título do slide não empurra o conteúdo para baixo. */
+.slidev-layout > :is(h1, h2, h3, h4, h5, h6):first-child {
+  margin-top: 0;
+}
+
+/* --- texto corrido -------------------------------------------------------- */
+
+.slidev-layout p {
+  margin: var(--ds-space-4) 0;
+  line-height: var(--ds-leading-loose);
+  max-width: 62ch;
+}
+
+.slidev-layout strong,
+.slidev-layout b {
+  font-weight: 650;
+  color: var(--ds-accent);
+}
+
+.slidev-layout em {
+  font-style: italic;
+}
+
+.slidev-layout a {
+  color: var(--ds-accent);
+  border-bottom: 1px dashed currentColor;
+  text-decoration: none;
+}
+
+.slidev-layout a:hover {
+  border-bottom-style: solid;
+}
+
+.slidev-layout hr {
+  height: 0;
+  margin: var(--ds-space-6) 0;
+  border: 0;
+  border-top: var(--ds-border) solid var(--ds-rule);
+}
+
+/* --- listas --------------------------------------------------------------- */
+
+.slidev-layout ul,
+.slidev-layout ol {
+  margin: var(--ds-space-4) 0;
+  padding-left: 1.3em;
+}
+
+.slidev-layout ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Marcador desenhado na mão: um traço curto no accent, alinhado com a primeira
+   linha. `list-style: none` + padding é mais previsível que ::marker na hora de
+   exportar PDF. */
+.slidev-layout ul > li {
+  position: relative;
+  margin: var(--ds-space-2) 0;
+  padding-left: 1.35em;
+  line-height: var(--ds-leading-loose);
+}
+
+.slidev-layout ul > li::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0.1em;
+  width: 0.7em;
+  height: 2px;
+  background: var(--ds-accent);
+  border-radius: 2px;
+}
+
+.slidev-layout ol > li {
+  margin: var(--ds-space-2) 0;
+  padding-left: 0.3em;
+  line-height: var(--ds-leading-loose);
+}
+
+.slidev-layout ol > li::marker {
+  color: var(--ds-accent);
+  font-weight: 650;
+}
+
+/* Sublistas: menores, sem o traço, recuadas. */
+.slidev-layout li ul > li::before {
+  background: var(--ds-muted);
+  width: 0.45em;
+}
+
+.slidev-layout li :is(ul, ol) {
+  margin: var(--ds-space-1) 0;
+  font-size: 0.92em;
+  color: var(--ds-muted);
+}
+
+/* --- citação -------------------------------------------------------------- */
+
+.slidev-layout blockquote {
+  margin: var(--ds-space-5) 0;
+  padding: var(--ds-space-2) 0 var(--ds-space-2) var(--ds-space-5);
+  border: 0;
+  border-left: var(--ds-border-thick) solid var(--ds-accent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ds-ink);
+  font-family: var(--ds-font-serif);
+  font-size: var(--ds-text-lg);
+  font-style: italic;
+  line-height: var(--ds-leading-normal);
+}
+
+.slidev-layout blockquote p {
+  margin: 0;
+  max-width: none;
+}
+
+/* --- código --------------------------------------------------------------- */
+
+.slidev-layout code {
+  font-family: var(--ds-font-mono);
+  font-size: 0.88em;
+}
+
+/* Código inline (fora de um bloco) ganha um chip discreto. */
+.slidev-layout :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-ink-wash);
+  color: var(--ds-ink);
+}
+
+.slidev-layout pre,
+.slidev-layout .slidev-code {
+  border: var(--ds-border) solid var(--ds-rule);
+  border-radius: var(--ds-radius);
+}
+
+/* --- tabela --------------------------------------------------------------- */
+
+.slidev-layout table {
+  width: 100%;
+  margin: var(--ds-space-4) 0;
+  border-collapse: collapse;
+  font-size: var(--ds-text-sm);
+}
+
+.slidev-layout th {
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border-bottom: 2px solid var(--ds-rule);
+  color: var(--ds-muted);
+  font-size: var(--ds-text-xs);
+  font-weight: 650;
+  letter-spacing: var(--ds-tracking-kicker);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.slidev-layout td {
+  padding: var(--ds-space-3);
+  border-bottom: var(--ds-border) solid var(--ds-rule);
+  vertical-align: top;
+}
+
+.slidev-layout tr:last-child td {
+  border-bottom: 0;
+}
+
+/* --- diversos ------------------------------------------------------------- */
+
+.slidev-layout img {
+  max-width: 100%;
+  border-radius: var(--ds-radius);
+}
+
+.slidev-layout kbd {
+  padding: 0.1em 0.4em;
+  border: var(--ds-border) solid var(--ds-rule);
+  border-bottom-width: 2px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-surface);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+}
+
+/* Mermaid: centralizado e nunca maior que o slide. */
+.slidev-layout .slidev-mermaid {
+  display: flex;
+  justify-content: center;
+  margin: var(--ds-space-4) 0;
+}
+
+/* O mermaid desenha no tamanho natural do grafo e estoura o slide sem isto. O `!important`
+   é porque ele grava width/height como atributo no próprio <svg>. */
+.slidev-layout .slidev-mermaid svg {
+  max-width: 100% !important;
+  max-height: 58vh;
+  height: auto !important;
+}

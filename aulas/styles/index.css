@@ -1,0 +1,15 @@
+/* ============================================================================
+   O ponto de entrada do design system.
+
+   O Slidev importa exatamente UM arquivo de estilo do seu projeto — o primeiro
+   que existir entre `styles/index.{ts,js,css}`, `styles.*` e `style.*`, sempre
+   a partir da pasta do .md (aqui: `aulas/`). Ele é carregado DEPOIS do estilo
+   do cliente e do tema, então o que estiver aqui vence no empate.
+
+   Por isso este arquivo só tem @import: quem manda na ordem é esta lista.
+   Arquivo novo em styles/ só passa a valer depois de entrar aqui.
+   ========================================================================== */
+
+@import "./tokens.css"; /* o vocabulário: cor, tipo, espaço */
+@import "./base.css"; /* como o markdown puro se parece */
+@import "./utilities.css"; /* as classes `ds-*` que os slides usam */

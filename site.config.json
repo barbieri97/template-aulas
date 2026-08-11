@@ -1,6 +1,6 @@
 {
-  "title": "Psicologia Comportamental",
-  "institution": "FASM",
-  "description": "Slides das aulas de Psicologia Comportamental — FASM",
-  "intro": "Slides das aulas do semestre. Use as setas para navegar e <kbd>o</kbd> para ver todos os slides de uma vez."
+  "title": "Template de Aulas",
+  "institution": "Slidev",
+  "description": "Template para escrever aulas em Slidev e publicar cada uma na sua própria URL, no GitHub Pages.",
+  "intro": "Três aulas de exemplo, feitas com o design system que vem neste repositório. Use as setas para navegar e <kbd>o</kbd> para ver todos os slides de uma vez."
 }

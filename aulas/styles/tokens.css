@@ -1,0 +1,100 @@
+/* ============================================================================
+   TOKENS — o vocabulário visual do design system.
+
+   Toda cor, tamanho e espaçamento do repositório sai daqui. Layouts e
+   componentes só consomem `var(--ds-*)`; nenhum deles escreve um hex na mão.
+   Trocar a identidade visual das aulas = editar este arquivo, e só ele.
+
+   O tema claro mora em `:root`. O escuro só redefine as cores, dentro de
+   `.dark` — a classe que o Slidev põe no <html> quando o deck está em modo
+   escuro (headmatter `colorSchema`). A landing do site reaproveita o mesmo
+   arquivo e liga essa classe sozinha pelo `prefers-color-scheme`.
+   ========================================================================== */
+
+:root {
+  /* --- cor ---------------------------------------------------------------
+     bg       fundo do slide
+     surface  cartões, blocos, código — sempre sobre o bg
+     ink      texto principal
+     muted    texto secundário, legendas, rótulos
+     rule     linhas, bordas, separadores
+     accent   a cor da disciplina: títulos de seção, destaques, links
+     accent-2 acento secundário, para o que precisa contrastar com o accent
+     ok / warn / danger  os três estados dos avisos (<Nota>) */
+  --ds-bg: #f8f7f4;
+  --ds-surface: #ffffff;
+  --ds-ink: #17202a;
+  --ds-muted: #5c6b74;
+  --ds-rule: #e2e0da;
+  --ds-accent: #0d7d7a;
+  --ds-accent-2: #b45f06;
+  --ds-ok: #2f7d32;
+  --ds-warn: #b45f06;
+  --ds-danger: #b3261e;
+
+  /* Versões translúcidas, para fundos de destaque que funcionam nos dois temas.
+     São derivadas na mão porque CSS não interpola hex sem color-mix em todo
+     navegador que o Slidev exporta em PDF. */
+  --ds-accent-wash: rgba(13, 125, 122, 0.09);
+  --ds-accent-2-wash: rgba(180, 95, 6, 0.10);
+  --ds-ink-wash: rgba(23, 32, 42, 0.05);
+
+  /* --- tipografia --------------------------------------------------------
+     A escala é fechada de propósito: 7 tamanhos. Se um slide "precisa" de um
+     tamanho que não está aqui, o problema costuma ser conteúdo demais. */
+  --ds-font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --ds-font-serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --ds-font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+
+  --ds-text-xs: 0.72rem;
+  --ds-text-sm: 0.85rem;
+  --ds-text-base: 1rem;
+  --ds-text-lg: 1.25rem;
+  --ds-text-xl: 1.65rem;
+  --ds-text-2xl: 2.2rem;
+  --ds-text-3xl: 3.2rem;
+
+  --ds-leading-tight: 1.15;
+  --ds-leading-normal: 1.5;
+  --ds-leading-loose: 1.7;
+  --ds-tracking-kicker: 0.16em;
+
+  /* --- espaço ------------------------------------------------------------
+     Escala de 4px. `--ds-pad-slide` é a margem interna padrão de um slide. */
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.5rem;
+  --ds-space-6: 2rem;
+  --ds-space-7: 3rem;
+  --ds-space-8: 4rem;
+  --ds-pad-slide: 2.6rem 3.2rem;
+
+  /* --- forma -------------------------------------------------------------- */
+  --ds-radius-sm: 4px;
+  --ds-radius: 10px;
+  --ds-radius-lg: 18px;
+  --ds-border: 1px;
+  --ds-border-thick: 3px;
+  --ds-shadow: 0 10px 30px -18px rgba(23, 32, 42, 0.55);
+}
+
+.dark {
+  --ds-bg: #12161b;
+  --ds-surface: #1a2027;
+  --ds-ink: #e9eef3;
+  --ds-muted: #93a1ae;
+  --ds-rule: #2a323b;
+  --ds-accent: #4cc2b8;
+  --ds-accent-2: #e8a05c;
+  --ds-ok: #6cc070;
+  --ds-warn: #e8a05c;
+  --ds-danger: #f0857c;
+
+  --ds-accent-wash: rgba(76, 194, 184, 0.12);
+  --ds-accent-2-wash: rgba(232, 160, 92, 0.12);
+  --ds-ink-wash: rgba(233, 238, 243, 0.06);
+
+  --ds-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.8);
+}
