@@ -105,6 +105,12 @@ A publicação é pelo **artefato do Actions**: o job `build` empacota o `dist/`
 → Source: `GitHub Actions`**; com a fonte em `Deploy from a branch` o `configure-pages` falha.
 Detalhes no README.
 
+O workflow roda `npx playwright install-deps chromium` logo depois do `npm ci`. O `npm ci`
+já baixa o binário do Chromium (é o `playwright-chromium` fazendo isso no seu próprio script
+`install`), mas só esse passo instala as libs de sistema que faltam no runner do Actions para
+rodar esse Chromium headless — sem ele o `slidev build` quebra na hora de gerar o PDF do
+`download: true`.
+
 `scripts/lint.mjs` é o lint do repositório, e é agnóstico de tema: a lista de layouts e
 componentes válidos é montada na hora, a partir do Slidev, do tema declarado (se houver) e das
 pastas locais de `aulas/`.

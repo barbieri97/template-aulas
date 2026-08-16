@@ -32,6 +32,12 @@ jobs:
 
       - run: npm ci
 
+      # `npm ci` já baixa o binário do Chromium (script `install` do playwright-chromium);
+      # falta a lib do sistema operacional pra ele rodar headless. Sem isso o `slidev build`
+      # quebra na hora de gerar o PDF de `download: true`.
+      - name: Dependências do sistema para o Chromium (Playwright)
+        run: npx playwright install-deps chromium
+
       # Descobre a URL pública do site. O output `base_path` é o caminho dela:
       # "/<nome-do-repo>" num repo comum, "/" num repo <usuario>.github.io.
       - name: Configurar Pages

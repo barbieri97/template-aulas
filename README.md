@@ -153,6 +153,11 @@ nome do repositório não aparece em lugar nenhum do código.
 
 O `--base` vem da variável `SITE_BASE` (`/` local, `/<repo>/` no CI).
 
+Antes do build, o workflow roda `npx playwright install-deps chromium` — o `npm ci` já baixa
+o binário do Chromium (script `install` do `playwright-chromium`), mas faltam as libs de
+sistema do runner pra ele rodar headless. Sem esse passo o `slidev build` quebra ao gerar o
+PDF de `download: true`.
+
 `scripts/lint.mjs` é agnóstico de tema: monta a lista de layouts e componentes válidos na hora
 (Slidev + tema declarado + `aulas/layouts` + `aulas/components`) e confere headmatter,
 imagens ausentes em `aulas/public/` e os campos reservados do Slidev que fazem um slide sumir
