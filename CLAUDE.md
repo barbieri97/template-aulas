@@ -53,10 +53,16 @@ um componente — a exceção honesta é o desenho que só existe naquele slide.
 | Idioma | conteúdo em português |
 | Imagens | `aulas/public/` — **não** na raiz do repo (veja "Por que `aulas/public/`" abaixo) |
 | Headmatter | além de `theme`/`title`, cada aula traz `info:` (ementa de uma linha) e `date:` (`YYYY-MM-DD`, entre aspas) — os dois alimentam a landing page |
+| Download | `download: true` no headmatter, em toda aula — deixa o deck disponível para baixar em PDF direto da apresentação publicada |
 | Identidade do curso | `site.config.json` na raiz (`title`, `institution`, `description`, `intro`) — o único lugar com o nome da disciplina |
 
 O bloco de abertura de um deck é headmatter **e** frontmatter do primeiro slide ao mesmo
 tempo. O `title:` dele é o título do deck e o que a `capa` mostra — não repita o campo.
+
+`download: true` é padrão em toda aula nova; `npm run lint` avisa (não bloqueia o build)
+quando falta. É o campo do Slidev que gera um PDF durante o build e mostra o botão de baixar
+no deck publicado — quem faz isso é o `playwright-chromium` (devDependency do
+`package.json`), que baixa um Chromium próprio no `npm install`/`npm ci`.
 
 ## Comandos
 

@@ -3,6 +3,7 @@ theme: none
 title: Aula 01 · Uma breve história da tipografia
 info: Como a letra impressa deixou de imitar a mão e virou tecnologia
 date: "2026-08-11"
+download: true
 author: Template de Aulas
 colorSchema: light
 layout: capa

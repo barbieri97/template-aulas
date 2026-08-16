@@ -3,6 +3,7 @@ theme: none
 title: Aula 02 · Como uma bicicleta se equilibra
 info: Por que a explicação mais popular está errada — e o que a substitui
 date: "2026-08-18"
+download: true
 author: Template de Aulas
 colorSchema: light
 layout: capa

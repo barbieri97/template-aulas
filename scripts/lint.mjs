@@ -102,6 +102,9 @@ async function lintDeck (file) {
     if (head.date && !RE_DATA.test(String(head.date))) {
       erro(`\`date: ${head.date}\` não está em YYYY-MM-DD (use aspas: date: "2026-03-12")`, 1)
     }
+    if (head.download === undefined) {
+      aviso('falta `download: true` no headmatter — é o padrão do repositório para a aula ficar disponível para baixar em PDF', 1)
+    }
   }
 
   // --- tema: o que dá para validar depende dele existir --------------------------------

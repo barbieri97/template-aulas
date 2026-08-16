@@ -42,6 +42,12 @@ só existe depois do `npm run build` — é o build que dá a cada deck o seu `-
 índice se atualiza a partir do `title` / `info` / `date` do topo do arquivo. O nome do arquivo
 vira a URL.
 
+Toda aula traz `download: true` no headmatter — é o padrão do repositório para deixar o deck
+disponível para baixar em PDF direto da apresentação publicada (`npm run lint` avisa se faltar
+numa aula nova). Quem gera esse PDF durante o build é o `playwright-chromium`, já listado em
+`devDependencies`; ele baixa um Chromium próprio no `npm install`/`npm ci`, então o primeiro
+`npm ci` do CI fica um pouco mais lento.
+
 Antes de escrever slides, leia [`docs/design-system.md`](docs/design-system.md) — layouts,
 componentes, tokens e as armadilhas do Slidev que fazem um slide sumir sem erro nenhum.
 Resumo das convenções em [`CLAUDE.md`](CLAUDE.md).
