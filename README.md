@@ -42,6 +42,12 @@ só existe depois do `npm run build` — é o build que dá a cada deck o seu `-
 índice se atualiza a partir do `title` / `info` / `date` do topo do arquivo. O nome do arquivo
 vira a URL.
 
+Toda aula traz `download: true` no headmatter — é o padrão do repositório para deixar o deck
+disponível para baixar em PDF direto da apresentação publicada (`npm run lint` avisa se faltar
+numa aula nova). Quem gera esse PDF durante o build é o `playwright-chromium`, já listado em
+`devDependencies`; ele baixa um Chromium próprio no `npm install`/`npm ci`, então o primeiro
+`npm ci` do CI fica um pouco mais lento.
+
 Antes de escrever slides, leia [`docs/design-system.md`](docs/design-system.md) — layouts,
 componentes, tokens e as armadilhas do Slidev que fazem um slide sumir sem erro nenhum.
 Resumo das convenções em [`CLAUDE.md`](CLAUDE.md).
@@ -146,6 +152,11 @@ nome do repositório não aparece em lugar nenhum do código.
    visual dos decks.
 
 O `--base` vem da variável `SITE_BASE` (`/` local, `/<repo>/` no CI).
+
+Antes do build, o workflow roda `npx playwright install-deps chromium` — o `npm ci` já baixa
+o binário do Chromium (script `install` do `playwright-chromium`), mas faltam as libs de
+sistema do runner pra ele rodar headless. Sem esse passo o `slidev build` quebra ao gerar o
+PDF de `download: true`.
 
 `scripts/lint.mjs` é agnóstico de tema: monta a lista de layouts e componentes válidos na hora
 (Slidev + tema declarado + `aulas/layouts` + `aulas/components`) e confere headmatter,

@@ -3,6 +3,7 @@ theme: none
 title: Aula 03 · Fermentação — pão, cerveja e queijo
 info: Três alimentos, um mesmo processo — e o que muda entre eles
 date: "2026-08-25"
+download: true
 author: Template de Aulas
 colorSchema: light
 layout: capa
