@@ -5,3 +5,12 @@ dist
 .vite-inspect
 .remote-assets
 components.d.ts
+
+# referencias/: o cache e o build local do VitePress
+referencias/.vitepress/cache
+referencias/.vitepress/dist
+
+# referencias/*/privados/: material com direitos autorais. A pasta existe no repo (o .gitkeep),
+# mas nada do que vai dentro dela é versionado.
+referencias/*/privados/*
+!referencias/*/privados/.gitkeep

@@ -2,7 +2,6 @@
 theme: none
 title: Design system — catálogo
 info: Um slide por layout e por componente, com a situação de uso nas notas
-date: "2026-08-11"
 colorSchema: light
 layout: capa
 kicker: Deck de bancada
@@ -294,7 +293,6 @@ o que se lê sem cansar.
 |---|---|
 | `title` | vira o nome da aula no índice do site |
 | `info` | a ementa de uma linha |
-| `date` | a data, em `YYYY-MM-DD` |
 
 ---
 layout: fecho

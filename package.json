@@ -6,14 +6,19 @@
     "dev": "node scripts/dev.mjs",
     "ref": "slidev aulas/_design-system.md --open",
     "build": "node scripts/build-site.mjs",
-    "lint": "node scripts/lint.mjs"
+    "lint": "node scripts/lint.mjs",
+    "referencias": "vitepress dev referencias --open",
+    "referencias:build": "vitepress build referencias",
+    "nova-referencia": "node scripts/nova-referencia.mjs"
   },
   "dependencies": {
     "@slidev/cli": "^52.19.0",
     "vue": "^3.5.33"
   },
   "devDependencies": {
+    "fflate": "^0.8.3",
     "playwright-chromium": "^1.62.1",
+    "vitepress": "^1.6.4",
     "yaml": "^2.9.0"
   }
 }

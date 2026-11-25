@@ -19,6 +19,12 @@ export const publicDir = join(aulasDir, 'public')
 export const stylesDir = join(aulasDir, 'styles')
 
 /**
+ * O material de referência das aulas: uma pasta `aula-NN/` por aula, cada uma com
+ * `AGENTS.md`, `docs/`, `externos/` e `privados/`. É também a raiz do VitePress.
+ */
+export const referenciasDir = join(root, 'referencias')
+
+/**
  * Os .md de aulas/, em ordem alfabética — que é a ordem das aulas, já que o nome
  * começa com `aula-NN`. Retorna caminhos absolutos.
  *
@@ -62,14 +68,25 @@ export function binOf (pkg, bin) {
  *
  * Todos os campos são opcionais; sem o arquivo, o site sai com títulos genéricos.
  *   title       — o <h1> e o <title> da landing
- *   institution — o kicker acima do título (o ano é acrescentado automaticamente)
+ *   institution — o kicker acima do título
  *   description — a meta description
  *   intro       — o parágrafo abaixo do título; HTML permitido (é você que escreve)
+ *   publicarReferencias — true publica o VitePress de referencias/ em /<repo>/referencias/.
+ *                 A env PUBLICAR_REFERENCIAS (1/0, true/false) sobrescreve o arquivo.
+ *   publicarExternos — true zipa cada referencias/aula-NN/externos/ e põe o link de download
+ *                 no card da aula. A env PUBLICAR_EXTERNOS sobrescreve.
  */
 export function siteConfig () {
   const path = join(root, 'site.config.json')
-  const defaults = { title: 'Aulas', institution: '', description: '', intro: '' }
-  if (!existsSync(path)) return defaults
+  const defaults = { title: 'Aulas', institution: '', description: '', intro: '', publicarReferencias: false, publicarExternos: false }
+  // Envs que sobrescrevem as flags do arquivo (1/0, true/false, sim/não).
+  const flagsEnv = { publicarReferencias: 'PUBLICAR_REFERENCIAS', publicarExternos: 'PUBLICAR_EXTERNOS' }
+  const override = {}
+  for (const [campo, nome] of Object.entries(flagsEnv)) {
+    const env = process.env[nome]
+    if (env !== undefined && env !== '') override[campo] = ['1', 'true', 'sim', 'yes'].includes(env.toLowerCase())
+  }
+  if (!existsSync(path)) return { ...defaults, ...override }
 
   let parsed
   try {
@@ -77,12 +94,28 @@ export function siteConfig () {
   } catch (err) {
     throw new Error(`site.config.json não é JSON válido: ${err.message}`)
   }
-  return { ...defaults, ...parsed }
+  return { ...defaults, ...parsed, ...override }
+}
+
+/**
+ * As pastas `referencias/aula-NN/`, em ordem. Retorna `{ num, dir }` com `num` = "NN".
+ */
+export function referenciaDirs () {
+  if (!existsSync(referenciasDir)) return []
+  return readdirSync(referenciasDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && /^aula-\d+$/.test(e.name))
+    .map((e) => ({ num: e.name.slice(5), dir: join(referenciasDir, e.name) }))
+    .sort((a, b) => Number(a.num) - Number(b.num))
+}
+
+/** O deck de aulas/ que corresponde ao número "NN" (`aula-NN-*.md`), ou null. */
+export function deckDoNumero (num) {
+  return deckFiles().find((f) => basename(f).startsWith(`aula-${num}-`)) ?? null
 }
 
 /**
  * O headmatter: o primeiro bloco `---` do arquivo, que é ao mesmo tempo a configuração
- * do deck e o frontmatter do primeiro slide. É de onde a landing tira título, ementa e data.
+ * do deck e o frontmatter do primeiro slide. É de onde a landing tira título e ementa.
  */
 export function readHeadmatter (file) {
   const src = readFileSync(file, 'utf-8').replace(/^﻿/, '')

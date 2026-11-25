@@ -31,6 +31,8 @@ npm run dev -- 03                             # abre a aula cujo nome contém "0
 npm run ref                                   # catálogo de layouts e componentes
 npm run lint                                  # valida os decks
 npm run build                                 # gera dist/ igual ao que vai pro ar
+npm run referencias                           # VitePress com o material de referência (localhost)
+npm run nova-referencia -- 04                 # cria referencias/aula-04/
 ```
 
 `npm run dev` serve **uma aula por vez**, na raiz. O conjunto das aulas mais a página inicial
@@ -39,7 +41,7 @@ só existe depois do `npm run build` — é o build que dá a cada deck o seu `-
 
 **Para criar uma aula nova:** copie um `.md` de `aulas/`, renomeie para
 `aula-NN-titulo-em-slug.md`, edite, commit, push. O workflow builda e publica sozinho — o
-índice se atualiza a partir do `title` / `info` / `date` do topo do arquivo. O nome do arquivo
+índice se atualiza a partir do `title` / `info` do topo do arquivo. O nome do arquivo
 vira a URL.
 
 Toda aula traz `download: true` no headmatter — é o padrão do repositório para deixar o deck
@@ -50,7 +52,7 @@ numa aula nova). Quem gera esse PDF durante o build é o `playwright-chromium`, 
 
 Antes de escrever slides, leia [`docs/design-system.md`](docs/design-system.md) — layouts,
 componentes, tokens e as armadilhas do Slidev que fazem um slide sumir sem erro nenhum.
-Resumo das convenções em [`CLAUDE.md`](CLAUDE.md).
+Resumo das convenções em [`AGENTS.md`](AGENTS.md).
 
 ## O que tem dentro
 
@@ -64,13 +66,14 @@ aulas/
 ├── lib/asset.ts                  resolve caminho de imagem contra a base do site
 └── public/                       imagens (`/foto.svg` no markdown)
 docs/                             design-system.md · temas.md
-scripts/                          dev.mjs · lint.mjs · build-site.mjs · lib.mjs
+referencias/                      material de referência: aula-NN/{AGENTS.md, docs/, externos/, privados/} + VitePress
+scripts/                          dev.mjs · lint.mjs · build-site.mjs · nova-referencia.mjs · lib.mjs
 site.config.json                  a identidade do curso
 ```
 
 **A pasta do deck é a raiz do projeto para o Slidev.** As aulas estão em `aulas/`, então
 `public/`, `layouts/`, `components/` e `styles/` só valem lá dentro; os mesmos nomes na raiz do
-repositório são ignorados em silêncio. Detalhes em [`CLAUDE.md`](CLAUDE.md).
+repositório são ignorados em silêncio. Detalhes em [`AGENTS.md`](AGENTS.md).
 
 ## Primeira publicação
 
@@ -143,7 +146,7 @@ nome do repositório não aparece em lugar nenhum do código.
 
 `scripts/build-site.mjs`:
 
-1. lê o topo (headmatter) de cada `aulas/*.md` para pegar título, ementa e data;
+1. lê o topo (headmatter) de cada `aulas/*.md` para pegar título e ementa;
 2. roda `scripts/lint.mjs` em todos — erro aqui aborta o build;
 3. roda **um `slidev build` por aula**, cada uma com o seu `--base` e `--router-mode hash`
    (necessário porque o Pages serve tudo sob `/<repo>/` e só tem um `404.html`, na raiz);

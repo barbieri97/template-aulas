@@ -7,6 +7,11 @@ De fábrica não há tema npm (`theme: none`): o visual vem de um design system 
 `aulas/styles`, `aulas/layouts` e `aulas/components`. Trocar por um tema pronto, ou gerar
 outro DS, é decisão de quem usa o template — os scripts não sabem qual é o visual.
 
+Ao lado das aulas, **`referencias/`** guarda o material de referência de cada aula — o texto
+autoral que embasa os slides e que pode virar produto à parte. Ver [Referências](#referências).
+
+Este arquivo vale para qualquer agente (é o único arquivo de instruções do repositório).
+
 ## Antes de escrever ou editar qualquer deck
 
 Leia **[`docs/design-system.md`](docs/design-system.md)** — os layouts, os componentes, os
@@ -52,9 +57,11 @@ um componente — a exceção honesta é o desenho que só existe naquele slide.
 | Tema | `theme: none` + design system local; ou um pacote npm, ver `docs/temas.md` |
 | Idioma | conteúdo em português |
 | Imagens | `aulas/public/` — **não** na raiz do repo (veja "Por que `aulas/public/`" abaixo) |
-| Headmatter | além de `theme`/`title`, cada aula traz `info:` (ementa de uma linha) e `date:` (`YYYY-MM-DD`, entre aspas) — os dois alimentam a landing page |
+| Headmatter | além de `theme`/`title`, cada aula traz `info:` (ementa de uma linha), que alimenta a landing page. **Sem `date:`**: as aulas se repetem ao longo do tempo, nada aqui é amarrado a data (o lint avisa se aparecer) |
 | Download | `download: true` no headmatter, em toda aula — deixa o deck disponível para baixar em PDF direto da apresentação publicada |
 | Identidade do curso | `site.config.json` na raiz (`title`, `institution`, `description`, `intro`) — o único lugar com o nome da disciplina |
+| Referências | `referencias/aula-NN/` (só o número) — ver [Referências](#referências) |
+| Flags de publicação | `publicarReferencias` (VitePress) e `publicarExternos` (zips de `externos/`) em `site.config.json`, ambas `false` de fábrica |
 
 O bloco de abertura de um deck é headmatter **e** frontmatter do primeiro slide ao mesmo
 tempo. O `title:` dele é o título do deck e o que a `capa` mostra — não repita o campo.
@@ -72,6 +79,9 @@ npm run dev -- 03                            # abre a aula cujo nome contém "03
 npm run ref                                  # abre o catálogo de layouts/componentes
 npm run lint                                 # valida todos os decks
 npm run build                                # builda tudo em dist/ (roda o lint antes)
+npm run referencias                          # VitePress das referências em localhost
+npm run referencias:build                    # build local do VitePress (referencias/.vitepress/dist)
+npm run nova-referencia -- 04                # cria referencias/aula-04/ com a estrutura padrão
 ```
 
 `npm run dev` serve **uma aula por vez**, na raiz (`/`). O conjunto das aulas mais a página
@@ -79,6 +89,62 @@ inicial só existe depois do `npm run build` — é o build que dá a cada deck 
 
 Para adicionar uma aula nova: crie o `.md` em `aulas/`, commit, push. O workflow builda e
 publica — nenhuma config precisa ser tocada.
+
+## Referências
+
+```
+referencias/
+├── .vitepress/            config do VitePress (menu montado sozinho a partir das pastas)
+├── index.md               visão geral: todas as aulas e todos os artigos
+└── aula-NN/               uma pasta por aula, só o número (casa com aulas/aula-NN-*.md)
+    ├── AGENTS.md          orquestração da aula — sem conteúdo
+    ├── docs/              o conteúdo, escrito pelo autor
+    ├── externos/          artigos e arquivos de apoio (versionados)
+    └── privados/          material com direitos autorais (NÃO versionado)
+```
+
+- **`aula-NN/AGENTS.md`** diz *como* a aula é montada: qual deck é o alvo, em que ordem ler
+  `docs/`, o roteiro (bloco → arquivo de `docs/` → layout) e as regras de fonte. **Não tem
+  conteúdo** — todo conteúdo mora em `docs/`. Ao trabalhar numa aula, leia primeiro esse
+  arquivo e depois `docs/` na ordem que ele indica.
+- **`docs/`** é texto do autor, em vários `.md`. Assunto grande vira subpasta. Prefixo numérico
+  (`01-contexto.md`) define a ordem no menu; `index.md` é a entrada da aula. O título no menu é
+  o `title:` do frontmatter ou, sem ele, o primeiro `# `. Não escreva conteúdo em `docs/` em nome
+  do autor sem ele pedir.
+- **`externos/`**: material de terceiros que pode ser citado, sempre com a fonte. É versionado —
+  e, portanto, público.
+- **`privados/`**: material com direitos autorais. Só o `.gitkeep` é versionado
+  (`.gitignore`). Serve para consulta; **nunca** copie trecho, imagem ou tabela de lá para
+  `docs/`, para um deck ou para qualquer arquivo versionado.
+
+Nova aula: `npm run nova-referencia -- NN` cria a pasta com `AGENTS.md`, `docs/index.md`,
+`externos/` e `privados/`, já apontando para o deck `aulas/aula-NN-*.md` se ele existir.
+
+### VitePress
+
+Um site só para todas as aulas, com raiz em `referencias/`. Entram só `index.md` e os
+`aula-NN/docs/**`; `AGENTS.md`, `externos/` e `privados/` ficam de fora (`srcExclude` em
+`referencias/.vitepress/config.mts`). A URL omite o `docs/`: `aula-01/docs/01-x.md` →
+`/aula-01/01-x`. O menu de cada aula usa o `title:` do deck correspondente em `aulas/`.
+
+**Publicação é opcional.** `"publicarReferencias": true` em `site.config.json` faz o
+`npm run build` gerar também `dist/referencias/` (estático, publicado no Pages em
+`/<repo>/referencias/`) e põe um link na landing. Com `false` (padrão) o site não muda. A env
+`PUBLICAR_REFERENCIAS=1|0` sobrescreve o arquivo, para testar local. Lembre que, ligado, todo o
+`docs/` fica público.
+
+### Material de apoio para download
+
+**Também opcional, e independente do VitePress.** `"publicarExternos": true` em
+`site.config.json` faz o `npm run build` compactar cada `referencias/aula-NN/externos/` que tenha
+algum arquivo em `dist/downloads/<slug-da-aula>-material-de-apoio.zip`, e o card da aula na
+landing ganha o link "Material de apoio" (com número de arquivos e tamanho). Arquivos ocultos
+(`.gitkeep`) ficam de fora; `privados/` nunca entra. Pasta `externos/` sem deck correspondente em
+`aulas/` gera só um aviso. A env `PUBLICAR_EXTERNOS=1|0` sobrescreve o arquivo.
+
+Ligado, o material de terceiros fica para download público — confira se a licença de cada
+arquivo permite redistribuição. Limites do GitHub Pages: 100 MB por arquivo no repositório e
+1 GB para o site publicado.
 
 ## Por que `aulas/public/`
 

@@ -1,0 +1,6 @@
+Material de apoio — Aula 01 (exemplo)
+
+Arquivos de exemplo para testar o download do material de apoio.
+Substitua por artigos e materiais que você tenha direito de redistribuir.
+
+- linha-do-tempo.csv: marcos da história da prensa, para abrir em planilha.
