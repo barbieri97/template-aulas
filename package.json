@@ -16,6 +16,7 @@
     "vue": "^3.5.33"
   },
   "devDependencies": {
+    "fflate": "^0.8.3",
     "playwright-chromium": "^1.62.1",
     "vitepress": "^1.6.4",
     "yaml": "^2.9.0"

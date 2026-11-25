@@ -73,14 +73,19 @@ export function binOf (pkg, bin) {
  *   intro       — o parágrafo abaixo do título; HTML permitido (é você que escreve)
  *   publicarReferencias — true publica o VitePress de referencias/ em /<repo>/referencias/.
  *                 A env PUBLICAR_REFERENCIAS (1/0, true/false) sobrescreve o arquivo.
+ *   publicarExternos — true zipa cada referencias/aula-NN/externos/ e põe o link de download
+ *                 no card da aula. A env PUBLICAR_EXTERNOS sobrescreve.
  */
 export function siteConfig () {
   const path = join(root, 'site.config.json')
-  const defaults = { title: 'Aulas', institution: '', description: '', intro: '', publicarReferencias: false }
-  const env = process.env.PUBLICAR_REFERENCIAS
-  const override = env === undefined || env === ''
-    ? {}
-    : { publicarReferencias: ['1', 'true', 'sim', 'yes'].includes(env.toLowerCase()) }
+  const defaults = { title: 'Aulas', institution: '', description: '', intro: '', publicarReferencias: false, publicarExternos: false }
+  // Envs que sobrescrevem as flags do arquivo (1/0, true/false, sim/não).
+  const flagsEnv = { publicarReferencias: 'PUBLICAR_REFERENCIAS', publicarExternos: 'PUBLICAR_EXTERNOS' }
+  const override = {}
+  for (const [campo, nome] of Object.entries(flagsEnv)) {
+    const env = process.env[nome]
+    if (env !== undefined && env !== '') override[campo] = ['1', 'true', 'sim', 'yes'].includes(env.toLowerCase())
+  }
   if (!existsSync(path)) return { ...defaults, ...override }
 
   let parsed

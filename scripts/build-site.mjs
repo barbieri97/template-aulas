@@ -8,9 +8,10 @@
 // Um `slidev build` por aula, de propósito: o `--base` do CLI vale para a invocação inteira,
 // e cada aula precisa do seu (é o que faz os assets resolverem sob /<repo>/<slug>/).
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
-import { binOf, deckFiles, readHeadmatter, referenciasDir, root, siteConfig, stylesDir } from './lib.mjs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { basename, join, relative } from 'node:path'
+import { zipSync } from 'fflate'
+import { binOf, deckFiles, readHeadmatter, referenciaDirs, referenciasDir, root, siteConfig, stylesDir } from './lib.mjs'
 
 const distDir = join(root, 'dist')
 
@@ -69,6 +70,8 @@ const decks = deckFiles().map((path) => {
     title: head.title ?? slug,
     info: head.info ?? '',
     date: head.date ?? '',
+    num: /^aula-(\d+)-/.exec(slug)?.[1] ?? null,
+    download: null, // preenchido abaixo, se o material de apoio for publicado
   }
 })
 
@@ -116,11 +119,55 @@ if (publicarReferencias) {
   ])
 }
 
+// ---------------------------------------------------------------- material de apoio (opcional)
+
+// Com `publicarExternos: true` em site.config.json (ou PUBLICAR_EXTERNOS=1), cada
+// referencias/aula-NN/externos/ com algum arquivo vira dist/downloads/<slug>-material-de-apoio.zip,
+// e o card da aula na landing ganha o link para baixar. privados/ nunca entra aqui.
+
+/** Todos os arquivos de uma pasta, recursivo, sem os ocultos (.gitkeep, .DS_Store…). */
+function arquivosDe (dir) {
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((e) => !e.name.startsWith('.'))
+    .flatMap((e) => e.isDirectory() ? arquivosDe(join(dir, e.name)) : [join(dir, e.name)])
+}
+
+const kb = (n) => n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1024 / 1024).toFixed(1).replace('.', ',')} MB`
+
+if (site.publicarExternos === true) {
+  console.log('\n── material de apoio (externos/) ──')
+  const downloadsDir = join(distDir, 'downloads')
+  for (const { num, dir } of referenciaDirs()) {
+    const externos = join(dir, 'externos')
+    const arquivos = existsSync(externos) ? arquivosDe(externos) : []
+    if (!arquivos.length) continue
+
+    const deck = decks.find((d) => d.num === num)
+    if (!deck) {
+      console.warn(`   aviso: referencias/aula-${num}/externos/ tem arquivos, mas não há aulas/aula-${num}-*.md — zip não gerado`)
+      continue
+    }
+
+    // Os arquivos ficam dentro de uma pasta com o nome da aula, para não espalhar ao descompactar.
+    const pasta = `${deck.slug}-material-de-apoio`
+    const entradas = Object.fromEntries(arquivos.map((f) => [
+      `${pasta}/${relative(externos, f).split('\\').join('/')}`,
+      [readFileSync(f), { mtime: statSync(f).mtime }],
+    ]))
+    const zip = zipSync(entradas, { level: 6 })
+
+    mkdirSync(downloadsDir, { recursive: true })
+    writeFileSync(join(downloadsDir, `${pasta}.zip`), zip)
+    deck.download = { href: `./downloads/${pasta}.zip`, tamanho: kb(zip.length), n: arquivos.length }
+    console.log(`   ${pasta}.zip · ${arquivos.length} arquivo(s) · ${kb(zip.length)}`)
+  }
+}
+
 // ---------------------------------------------------------------- landing page
 
 const cards = decks.map((deck, i) => `
       <li class="card">
-        <a href="./${deck.slug}/">
+        <a class="deck" href="./${deck.slug}/">
           <span class="num">${String(i + 1).padStart(2, '0')}</span>
           <span class="body">
             <span class="title">${escapeHtml(deck.title)}</span>
@@ -128,7 +175,8 @@ const cards = decks.map((deck, i) => `
             ${deck.date ? `<span class="date">${escapeHtml(formatDate(deck.date))}</span>` : ''}
           </span>
           <span class="go" aria-hidden="true">→</span>
-        </a>
+        </a>${deck.download ? `
+        <a class="apoio" href="${deck.download.href}" download>↓ Material de apoio (.zip · ${deck.download.n} arquivo${deck.download.n > 1 ? 's' : ''} · ${deck.download.tamanho})</a>` : ''}
       </li>`).join('')
 
 // Landing estática e self-contained, pintada com os tokens do design system (ver tokensCss()).
@@ -165,14 +213,14 @@ ${tokensCss()}
   .sub { color: var(--ds-muted); margin: 0; max-width: 34rem; }
   .rule { width: 3.5rem; height: 3px; border-radius: 3px; background: var(--ds-accent); margin: 2rem 0; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
-  .card a {
+  .card .deck {
     display: flex; align-items: center; gap: 1.1rem;
     padding: 1.15rem 1.3rem; text-decoration: none; color: inherit;
     background: var(--ds-surface); border: var(--ds-border) solid var(--ds-rule);
     border-radius: var(--ds-radius-lg);
     transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
   }
-  .card a:hover, .card a:focus-visible {
+  .card .deck:hover, .card .deck:focus-visible {
     transform: translateY(-2px); border-color: var(--ds-accent);
     box-shadow: var(--ds-shadow); outline: none;
   }
@@ -182,7 +230,12 @@ ${tokensCss()}
   .info { color: var(--ds-muted); font-size: .92rem; }
   .date { color: var(--ds-muted); font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
   .go { color: var(--ds-muted); font-size: 1.25rem; }
-  .card a:hover .go { color: var(--ds-accent); }
+  .card .deck:hover .go { color: var(--ds-accent); }
+  .apoio {
+    display: inline-block; margin: .45rem 0 0 1.3rem; font-size: .85rem; font-weight: 600;
+    color: var(--ds-accent); text-decoration: none;
+  }
+  .apoio:hover, .apoio:focus-visible { text-decoration: underline; }
   .refs { margin: 1.6rem 0 0; }
   .refs a { color: var(--ds-accent); font-weight: 700; text-decoration: none; }
   .refs a:hover { text-decoration: underline; }

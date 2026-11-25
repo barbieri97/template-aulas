@@ -61,6 +61,7 @@ um componente — a exceção honesta é o desenho que só existe naquele slide.
 | Download | `download: true` no headmatter, em toda aula — deixa o deck disponível para baixar em PDF direto da apresentação publicada |
 | Identidade do curso | `site.config.json` na raiz (`title`, `institution`, `description`, `intro`) — o único lugar com o nome da disciplina |
 | Referências | `referencias/aula-NN/` (só o número) — ver [Referências](#referências) |
+| Flags de publicação | `publicarReferencias` (VitePress) e `publicarExternos` (zips de `externos/`) em `site.config.json`, ambas `false` de fábrica |
 
 O bloco de abertura de um deck é headmatter **e** frontmatter do primeiro slide ao mesmo
 tempo. O `title:` dele é o título do deck e o que a `capa` mostra — não repita o campo.
@@ -131,6 +132,19 @@ Um site só para todas as aulas, com raiz em `referencias/`. Entram só `index.m
 `/<repo>/referencias/`) e põe um link na landing. Com `false` (padrão) o site não muda. A env
 `PUBLICAR_REFERENCIAS=1|0` sobrescreve o arquivo, para testar local. Lembre que, ligado, todo o
 `docs/` fica público.
+
+### Material de apoio para download
+
+**Também opcional, e independente do VitePress.** `"publicarExternos": true` em
+`site.config.json` faz o `npm run build` compactar cada `referencias/aula-NN/externos/` que tenha
+algum arquivo em `dist/downloads/<slug-da-aula>-material-de-apoio.zip`, e o card da aula na
+landing ganha o link "Material de apoio" (com número de arquivos e tamanho). Arquivos ocultos
+(`.gitkeep`) ficam de fora; `privados/` nunca entra. Pasta `externos/` sem deck correspondente em
+`aulas/` gera só um aviso. A env `PUBLICAR_EXTERNOS=1|0` sobrescreve o arquivo.
+
+Ligado, o material de terceiros fica para download público — confira se a licença de cada
+arquivo permite redistribuição. Limites do GitHub Pages: 100 MB por arquivo no repositório e
+1 GB para o site publicado.
 
 ## Por que `aulas/public/`
 
