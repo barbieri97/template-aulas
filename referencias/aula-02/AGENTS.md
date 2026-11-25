@@ -21,6 +21,7 @@ Leia `docs/` nesta ordem antes de mexer no deck. Mantenha a lista em dia quando 
 criado, renomeado ou dividido em pasta.
 
 1. [`docs/index.md`](docs/index.md)
+2. [`docs/01-o-mito-do-giroscopio.md`](docs/01-o-mito-do-giroscopio.md)
 
 ## Roteiro da aula
 
@@ -30,6 +31,8 @@ Cada linha é um bloco da aula: de onde vem o conteúdo e como ele vira slide. A
 | # | Bloco | Fonte em `docs/` | Layout / componentes | Observação |
 |---|---|---|---|---|
 | 1 | Abertura | `index.md` | `capa` | |
+| 2 | O mito | `01-o-mito-do-giroscopio.md` | `destaque` | |
+| 3 | O que de fato segura | `01-o-mito-do-giroscopio.md` | `Grade` | |
 
 ## Como montar
 

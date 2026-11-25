@@ -44,8 +44,15 @@ function itensDe (dir: string, aula: string): DefaultTheme.SidebarItem[] {
   for (const e of entradas) {
     const abs = join(dir, e.name)
     if (e.isDirectory()) {
+      // Subpasta com index.md: o título dele nomeia o grupo, e clicar no grupo abre o index.
       const filhos = itensDe(abs, aula)
-      if (filhos.length) itens.push({ text: rotuloDePasta(e.name), collapsed: true, items: filhos })
+      const indice = join(abs, 'index.md')
+      if (existsSync(indice)) {
+        const [entrada, ...resto] = filhos
+        itens.push({ text: tituloDe(indice), link: entrada.link, collapsed: true, items: resto })
+      } else if (filhos.length) {
+        itens.push({ text: rotuloDePasta(e.name), collapsed: true, items: filhos })
+      }
     } else if (e.name.endsWith('.md')) {
       const src = relative(referenciasDir, abs).split('\\').join('/')
       const destino = src.replace(`${aula}/docs/`, `${aula}/`)

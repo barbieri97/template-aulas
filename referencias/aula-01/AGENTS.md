@@ -21,6 +21,10 @@ Leia `docs/` nesta ordem antes de mexer no deck. Mantenha a lista em dia quando 
 criado, renomeado ou dividido em pasta.
 
 1. [`docs/index.md`](docs/index.md)
+2. [`docs/01-contexto.md`](docs/01-contexto.md)
+3. [`docs/02-tipos-moveis/index.md`](docs/02-tipos-moveis/index.md)
+4. [`docs/02-tipos-moveis/01-gutenberg.md`](docs/02-tipos-moveis/01-gutenberg.md)
+5. [`docs/02-tipos-moveis/02-difusao.md`](docs/02-tipos-moveis/02-difusao.md)
 
 ## Roteiro da aula
 
@@ -30,6 +34,9 @@ Cada linha é um bloco da aula: de onde vem o conteúdo e como ele vira slide. A
 | # | Bloco | Fonte em `docs/` | Layout / componentes | Observação |
 |---|---|---|---|---|
 | 1 | Abertura | `index.md` | `capa` | |
+| 2 | Antes da prensa | `01-contexto.md` | `figura` | manuscrito × impresso |
+| 3 | O sistema de Gutenberg | `02-tipos-moveis/01-gutenberg.md` | `Grade` + `Cartao` | um cartão por componente |
+| 4 | Difusão | `02-tipos-moveis/02-difusao.md` | `LinhaDoTempo` | datas de `externos/linha-do-tempo.csv` |
 
 ## Como montar
 
