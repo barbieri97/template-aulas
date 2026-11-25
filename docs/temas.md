@@ -30,7 +30,6 @@ E no headmatter de cada aula:
 theme: slidev-theme-<nome>
 title: Aula 01 · ...
 info: ...
-date: "2026-03-12"
 ---
 ```
 

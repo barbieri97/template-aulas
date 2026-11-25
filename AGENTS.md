@@ -57,7 +57,7 @@ um componente — a exceção honesta é o desenho que só existe naquele slide.
 | Tema | `theme: none` + design system local; ou um pacote npm, ver `docs/temas.md` |
 | Idioma | conteúdo em português |
 | Imagens | `aulas/public/` — **não** na raiz do repo (veja "Por que `aulas/public/`" abaixo) |
-| Headmatter | além de `theme`/`title`, cada aula traz `info:` (ementa de uma linha) e `date:` (`YYYY-MM-DD`, entre aspas) — os dois alimentam a landing page |
+| Headmatter | além de `theme`/`title`, cada aula traz `info:` (ementa de uma linha), que alimenta a landing page. **Sem `date:`**: as aulas se repetem ao longo do tempo, nada aqui é amarrado a data (o lint avisa se aparecer) |
 | Download | `download: true` no headmatter, em toda aula — deixa o deck disponível para baixar em PDF direto da apresentação publicada |
 | Identidade do curso | `site.config.json` na raiz (`title`, `institution`, `description`, `intro`) — o único lugar com o nome da disciplina |
 | Referências | `referencias/aula-NN/` (só o número) — ver [Referências](#referências) |

@@ -41,7 +41,7 @@ só existe depois do `npm run build` — é o build que dá a cada deck o seu `-
 
 **Para criar uma aula nova:** copie um `.md` de `aulas/`, renomeie para
 `aula-NN-titulo-em-slug.md`, edite, commit, push. O workflow builda e publica sozinho — o
-índice se atualiza a partir do `title` / `info` / `date` do topo do arquivo. O nome do arquivo
+índice se atualiza a partir do `title` / `info` do topo do arquivo. O nome do arquivo
 vira a URL.
 
 Toda aula traz `download: true` no headmatter — é o padrão do repositório para deixar o deck
@@ -146,7 +146,7 @@ nome do repositório não aparece em lugar nenhum do código.
 
 `scripts/build-site.mjs`:
 
-1. lê o topo (headmatter) de cada `aulas/*.md` para pegar título, ementa e data;
+1. lê o topo (headmatter) de cada `aulas/*.md` para pegar título e ementa;
 2. roda `scripts/lint.mjs` em todos — erro aqui aborta o build;
 3. roda **um `slidev build` por aula**, cada uma com o seu `--base` e `--router-mode hash`
    (necessário porque o Pages serve tudo sob `/<repo>/` e só tem um `404.html`, na raiz);
