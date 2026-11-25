@@ -19,6 +19,12 @@ export const publicDir = join(aulasDir, 'public')
 export const stylesDir = join(aulasDir, 'styles')
 
 /**
+ * O material de referência das aulas: uma pasta `aula-NN/` por aula, cada uma com
+ * `AGENTS.md`, `docs/`, `externos/` e `privados/`. É também a raiz do VitePress.
+ */
+export const referenciasDir = join(root, 'referencias')
+
+/**
  * Os .md de aulas/, em ordem alfabética — que é a ordem das aulas, já que o nome
  * começa com `aula-NN`. Retorna caminhos absolutos.
  *
@@ -65,11 +71,17 @@ export function binOf (pkg, bin) {
  *   institution — o kicker acima do título (o ano é acrescentado automaticamente)
  *   description — a meta description
  *   intro       — o parágrafo abaixo do título; HTML permitido (é você que escreve)
+ *   publicarReferencias — true publica o VitePress de referencias/ em /<repo>/referencias/.
+ *                 A env PUBLICAR_REFERENCIAS (1/0, true/false) sobrescreve o arquivo.
  */
 export function siteConfig () {
   const path = join(root, 'site.config.json')
-  const defaults = { title: 'Aulas', institution: '', description: '', intro: '' }
-  if (!existsSync(path)) return defaults
+  const defaults = { title: 'Aulas', institution: '', description: '', intro: '', publicarReferencias: false }
+  const env = process.env.PUBLICAR_REFERENCIAS
+  const override = env === undefined || env === ''
+    ? {}
+    : { publicarReferencias: ['1', 'true', 'sim', 'yes'].includes(env.toLowerCase()) }
+  if (!existsSync(path)) return { ...defaults, ...override }
 
   let parsed
   try {
@@ -77,7 +89,23 @@ export function siteConfig () {
   } catch (err) {
     throw new Error(`site.config.json não é JSON válido: ${err.message}`)
   }
-  return { ...defaults, ...parsed }
+  return { ...defaults, ...parsed, ...override }
+}
+
+/**
+ * As pastas `referencias/aula-NN/`, em ordem. Retorna `{ num, dir }` com `num` = "NN".
+ */
+export function referenciaDirs () {
+  if (!existsSync(referenciasDir)) return []
+  return readdirSync(referenciasDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && /^aula-\d+$/.test(e.name))
+    .map((e) => ({ num: e.name.slice(5), dir: join(referenciasDir, e.name) }))
+    .sort((a, b) => Number(a.num) - Number(b.num))
+}
+
+/** O deck de aulas/ que corresponde ao número "NN" (`aula-NN-*.md`), ou null. */
+export function deckDoNumero (num) {
+  return deckFiles().find((f) => basename(f).startsWith(`aula-${num}-`)) ?? null
 }
 
 /**

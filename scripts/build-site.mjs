@@ -10,7 +10,7 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
-import { binOf, deckFiles, readHeadmatter, root, siteConfig, stylesDir } from './lib.mjs'
+import { binOf, deckFiles, readHeadmatter, referenciasDir, root, siteConfig, stylesDir } from './lib.mjs'
 
 const distDir = join(root, 'dist')
 
@@ -101,6 +101,21 @@ for (const deck of decks) {
   ])
 }
 
+// ---------------------------------------------------------------- referências (opcional)
+
+// O VitePress de referencias/ só vai para o site com `publicarReferencias: true` em
+// site.config.json (ou PUBLICAR_REFERENCIAS=1 no ambiente). Desligado, o site fica só com as aulas.
+const publicarReferencias = site.publicarReferencias === true && existsSync(referenciasDir)
+
+if (publicarReferencias) {
+  console.log('\n── referencias (VitePress) ──')
+  run(binOf('vitepress', 'vitepress'), [
+    'build', referenciasDir,
+    '--base', `${siteBase}referencias/`,
+    '--outDir', join(distDir, 'referencias'),
+  ])
+}
+
 // ---------------------------------------------------------------- landing page
 
 const cards = decks.map((deck, i) => `
@@ -168,6 +183,9 @@ ${tokensCss()}
   .date { color: var(--ds-muted); font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
   .go { color: var(--ds-muted); font-size: 1.25rem; }
   .card a:hover .go { color: var(--ds-accent); }
+  .refs { margin: 1.6rem 0 0; }
+  .refs a { color: var(--ds-accent); font-weight: 700; text-decoration: none; }
+  .refs a:hover { text-decoration: underline; }
   footer { margin-top: 3rem; color: var(--ds-muted); font-size: .82rem; }
   footer a { color: inherit; }
 </style>
@@ -184,7 +202,8 @@ ${tokensCss()}
   </header>
   <div class="rule"></div>
   <ul>${cards}
-  </ul>
+  </ul>${publicarReferencias ? `
+  <p class="refs"><a href="./referencias/">Material de referência das aulas →</a></p>` : ''}
   <footer>
     Feito com <a href="https://sli.dev/">Slidev</a>.
   </footer>
@@ -198,4 +217,5 @@ writeFileSync(join(distDir, '.nojekyll'), '', 'utf-8')
 
 console.log(`\n✓ dist/ pronto — index + ${decks.length} deck(s)`)
 for (const deck of decks) console.log(`   ${siteBase}${deck.slug}/`)
+console.log(publicarReferencias ? `   ${siteBase}referencias/` : '   (referências não publicadas — publicarReferencias: false)')
 console.log()
